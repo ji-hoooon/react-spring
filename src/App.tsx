@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Sub from './Sub';
@@ -11,6 +11,25 @@ let a:number = 10; //변수
 const c:number = 15; //상수 (불변)
 
 function App() {
+  //6) useMemo
+  //: 메모리제이션
+  const [list, setList] = useState([1,2,3,4]);
+  const [str, setStr] = useState("합계");
+  
+  const getAddResult = () =>{
+    let sum:number=0;
+    list.forEach((i) => (sum=sum+i)); //한 줄일 경우 리턴 생략 가능
+    console.log("useMemo sum",sum);
+    return sum;
+  };
+
+  //return에서 한 상태변수의 상태변경에 의해 다른 상태변수까지 상태변경되었다고 인지되는 것 방지
+  //const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+  const addResult = useMemo(() => getAddResult(),[list]);
+  //두 개의 인자 : (1) 계산할 값 또는 함수, (2) 의존성 배열
+  //-> 의존성 배열에 포함된 값이 변경될 때만 게산이 다시 수행
+  //-> 함수선언은 호이스팅, 함수 표현식이나 화살표 함수는 호이스팅 안됨
+
   //5) useEffect
   const [data, setData] =useState(0); //초기값 0
   //변경시에 실행 되는 변수
@@ -123,6 +142,25 @@ let sample:User[]=[
   //jsx (1) 리턴은 하나의 태그만
   return ( //jsx (5) 리턴이 한줄일 떄와 한줄 초과일 때 괄호 유무의 차이
     <div>
+     {/* 6) useMemo */}
+    {list.map((i)=>(
+      <h1> {i}</h1>
+    ) )}
+  <button onClick={()=>{
+    setList([...list,list[list.length-1]+1]);
+  }}>리스트 값 추가</button>
+  {/* <div> 합계 : {getAddResult()}</div> */}
+  {/* 리스트 값 추가시 리턴이 다시 실행 -> 합계 다시 계산 */}
+  <button onClick={()=>{
+    setStr("총합");
+  }}>합계 문자 변경</button>
+  {/* <div> {str} : {getAddResult()}</div>   */}
+  {/* 합계 문자 변경시에도 useMemo sum함수 실행 -> 실행 안되도록 하려면? -> 필요한 함수만 실행*/}
+  {/* :상태변수 str의 상태 변경 -> return 영역 다시 렌더링*/}
+  <div> {str} : {addResult}</div>  
+  {/* 합계 문자 변경시에 useMemo sum함수 실행 안됨 -> useMemo 사용 */}
+
+
     {/* /5) useEffect */}
     <button onClick={()=>{setSearch(Math.floor(Math.random() * 100))}}>검색하기</button>
     <h1>데이터: {data}</h1>
