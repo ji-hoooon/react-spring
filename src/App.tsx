@@ -5,6 +5,19 @@ import Sub from "./Sub";
 //5)
 import { num } from "./aa/Third";
 import { randomFill } from "crypto";
+import styled from "styled-components";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Login from "./components/Login";
+import LoginPage from "./pages/LoginPage";
+
+//8) styled-components
+// const Title = styled.h1`
+const Title = styled.h1`
+  font-size: 1.5em;
+  text-align: center;
+  color: #bf4f74;
+`;
 
 //3)jsx 문법
 let a: number = 10; //변수
@@ -160,6 +173,14 @@ function App() {
   return (
     //jsx (5) 리턴이 한줄일 떄와 한줄 초과일 때 괄호 유무의 차이
     <div>
+      {/* 8) styled-components */}
+      {/* <Header />
+      <Login />
+      <Footer /> */}
+      <LoginPage />
+      <div ref={myRef}>
+        <Title>박스</Title>
+      </div>
       {/* 7) useRef (디자인) */}
       <button
         onClick={() => {
@@ -212,7 +233,8 @@ function App() {
       {/* 리스트 값 추가시 리턴이 다시 실행 -> 합계 다시 계산 */}
       <button
         onClick={() => {
-          setStr("총합");
+          if (str === "합계") setStr("총합");
+          else if (str === "총합") setStr("합계");
         }}
       >
         합계 문자 변경
